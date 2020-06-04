@@ -83,5 +83,6 @@ int main(void)
 
     free(data);
     free(result);
+    iirfilt_crcf_destroy(q);
     return 0;
 }
