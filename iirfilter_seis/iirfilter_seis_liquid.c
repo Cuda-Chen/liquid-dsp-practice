@@ -66,18 +66,16 @@ int main(void)
     fprintf(fptr, "t=0:(n-1);\n");
     fprintf(fptr, "figure;\n");
     fprintf(fptr, "subplot(2,1,1);\n");
-    fprintf(fptr, "  plot(t,real(x),'-','Color',[1 1 1]*0.5,'LineWidth',1,...\n");
-    fprintf(fptr, "       t,real(y),'-','Color',[0 0.5 0.25],'LineWidth',2);\n");
+    fprintf(fptr, "  plot(t,real(x),'-','Color',[0 0.5 0.25],'LineWidth',1);\n");
     fprintf(fptr, "  xlabel('time');\n");
-    fprintf(fptr, "  ylabel('real');\n");
-    fprintf(fptr, "  legend('input','filtered output','location','northeast');\n");
+    fprintf(fptr, "  ylabel('amplitude');\n");
+    fprintf(fptr, "  legend('input','location','northeast');\n");
     fprintf(fptr, "  grid on;\n");
     fprintf(fptr, "subplot(2,1,2);\n");
-    fprintf(fptr, "  plot(t,imag(x),'-','Color',[1 1 1]*0.5,'LineWidth',1,...\n");
-    fprintf(fptr, "       t,imag(y),'-','Color',[0 0.25 0.5],'LineWidth',2);\n");
+    fprintf(fptr, "  plot(t,real(y),'-','Color',[0 0.25 0.5],'LineWidth',1)\n");
     fprintf(fptr, "  xlabel('time');\n");
-    fprintf(fptr, "  ylabel('imag');\n");
-    fprintf(fptr, "  legend('input','filtered output','location','northeast');\n");
+    fprintf(fptr, "  ylabel('amplitude');\n");
+    fprintf(fptr, "  legend('filtered output','location','northeast');\n");
     fprintf(fptr, "  grid on;\n");
     fclose(fptr);
 
