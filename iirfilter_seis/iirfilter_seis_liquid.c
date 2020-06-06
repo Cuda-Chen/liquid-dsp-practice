@@ -47,6 +47,16 @@ int main(void)
         iirfilt_crcf_execute(q, data[index], &result[index]);
     }
 
+    // compute frequency response
+    int nfft = 100000;
+    float complex H[nfft];
+    int i;
+    for(i = 0; i < nfft; i++)
+    {
+        float freq = 0.5f * (float)i / (float)nfft;
+        iirfilt_crcf_freqresponse(q, freq, &H[i]);
+    }
+
     // output filtered result to script
     FILE *fptr = fopen(outputfile, "w");
     fprintf(fptr, "%% %s: auto-generated file. DO NOT EDIT.\n", outputfile);
@@ -55,13 +65,17 @@ int main(void)
     fprintf(fptr, "\n");
     fprintf(fptr, "order=%d;\n", order);
     fprintf(fptr, "n=%d;\n", dataSize);
+    fprintf(fptr, "nfft=%u\n", nfft);
     fprintf(fptr, "x=zeros(1,n);\n");
     fprintf(fptr, "y=zeros(1,n);\n");
+    fprintf(fptr, "H=zeros(1,nfft);\n");
     for(index = 0; index != dataSize; index++)
     {
         fprintf(fptr, "x(%d) = %e + j*%e;\n", index + 1, crealf(data[index]), cimagf(data[index]));
         fprintf(fptr, "y(%d) = %e + j*%e;\n", index + 1, crealf(result[index]), cimagf(result[index]));
     }
+    for (i=0; i<nfft; i++)
+        fprintf(fptr,"H(%4u) = %12.8f + j*%12.8f;\n", i+1, crealf(H[i]), cimagf(H[i]));
     // plot output
     fprintf(fptr, "t=0:(n-1);\n");
     fprintf(fptr, "figure;\n");
@@ -77,6 +91,27 @@ int main(void)
     fprintf(fptr, "  ylabel('amplitude');\n");
     fprintf(fptr, "  legend('filtered output','location','northeast');\n");
     fprintf(fptr, "  grid on;\n");
+
+    // plot frequency response
+    fprintf(fptr,"f=0.5*[0:(nfft-1)]/nfft;\n");
+    fprintf(fptr,"figure;\n");
+    fprintf(fptr,"subplot(3,1,1);\n");
+    fprintf(fptr,"  plot(f,20*log10(abs(H)),'Color',[0 0.25 0.5],'LineWidth',2);\n");
+    fprintf(fptr,"  axis([0 0.005 -3 0]);\n");
+    fprintf(fptr,"  grid on;\n");
+    fprintf(fptr,"  ylabel('Pass band [dB]');\n");
+    fprintf(fptr,"subplot(3,1,2);\n");
+    fprintf(fptr,"  plot(f,20*log10(abs(H)),'Color',[0 0.25 0.5],'LineWidth',2);\n");
+    fprintf(fptr,"  axis([0 0.005 -100 0]);\n");
+    fprintf(fptr,"  grid on;\n");
+    fprintf(fptr,"  ylabel('Stop band [dB]');\n");
+    fprintf(fptr,"subplot(3,1,3);\n");
+    fprintf(fptr,"  plot(f,180/pi*arg(H),'Color',[0 0.25 0.5],'LineWidth',2);\n");
+    fprintf(fptr,"  axis([0 0.005 -100 0]);\n");
+    fprintf(fptr,"  grid on;\n");
+    fprintf(fptr,"  ylabel('Phase [degrees]');\n");
+    fprintf(fptr,"  xlabel('Normalized Frequency [f/F_s]');\n");
+
     fclose(fptr);
 
     free(data);
