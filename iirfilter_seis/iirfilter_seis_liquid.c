@@ -48,7 +48,7 @@ int main(void)
     }
 
     // compute frequency response
-    int nfft = 100000;
+    int nfft = 5000;
     float complex H[nfft];
     int i;
     for(i = 0; i < nfft; i++)
@@ -107,7 +107,7 @@ int main(void)
     fprintf(fptr,"  ylabel('Stop band [dB]');\n");
     fprintf(fptr,"subplot(3,1,3);\n");
     fprintf(fptr,"  plot(f,180/pi*arg(H),'Color',[0 0.25 0.5],'LineWidth',2);\n");
-    fprintf(fptr,"  axis([0 0.005 -100 0]);\n");
+    fprintf(fptr,"  axis([0 0.005 -180 180]);\n");
     fprintf(fptr,"  grid on;\n");
     fprintf(fptr,"  ylabel('Phase [degrees]');\n");
     fprintf(fptr,"  xlabel('Normalized Frequency [f/F_s]');\n");
